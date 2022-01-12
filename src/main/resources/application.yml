@@ -1,0 +1,21 @@
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  thymeleaf:
+    enabled: true
+    suffix: .html
+    check-template-location: true
+    servlet:
+      content-type: text/html
+    prefix: classpath:/templates/
+  #jpa:
+  #  properties:
+  #    hibernate:
+  #      dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+  #  hibernate:
+  #    ddl-auto: update
+  servlet:
+    multipart:
+      max-file-size: 1024MB
+      max-request-size: 1024MB

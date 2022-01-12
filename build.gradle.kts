@@ -33,11 +33,11 @@ dependencies {
 	implementation("org.apache.poi:poi:5.1.0")
 	implementation("org.apache.poi:poi-ooxml:5.1.0")
 	implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
+	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0-native-mt")
 
 	developmentOnly("org.springframework.boot:spring-boot-devtools:2.6.2")
 	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor:2.6.2")
 	testImplementation("org.springframework.boot:spring-boot-starter-test:2.6.2")
-
 }
 
 tasks.withType<KotlinCompile> {
