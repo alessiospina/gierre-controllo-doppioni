@@ -5,7 +5,8 @@ import org.springframework.http.HttpStatus
 class ServerResponseDto<T>(
     val status: HttpStatus,
     val message: String,
-    val data: T) {
+    val data: T
+) {
 
     companion object {
         @JvmStatic var SUCCESS = "Request completed successfully."

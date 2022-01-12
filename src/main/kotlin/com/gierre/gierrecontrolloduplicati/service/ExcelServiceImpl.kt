@@ -1,20 +1,18 @@
 package com.gierre.gierrecontrolloduplicati.service
 
-import com.gierre.gierrecontrolloduplicati.controller.ControlloDuplicatiController
 import com.gierre.gierrecontrolloduplicati.dto.ExcelRowDto
 import com.gierre.gierrecontrolloduplicati.dto.ServerResponseDto
 import com.gierre.gierrecontrolloduplicati.helper.ExcelHelper
+import com.gierre.gierrecontrolloduplicati.mapper.ExcelRowMapper
+import com.gierre.gierrecontrolloduplicati.repository.ExcelRepository
 import kotlinx.coroutines.*
-import kotlinx.serialization.KSerializer
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.configurationprocessor.json.JSONArray
-import org.springframework.boot.configurationprocessor.json.JSONObject
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.util.logging.Logger
-import kotlin.system.measureNanoTime
 import kotlin.system.measureTimeMillis
 
 
@@ -23,6 +21,12 @@ class ExcelServiceImpl: ExcelService {
 
     @Autowired
     private lateinit var excelHelper: ExcelHelper
+
+    @Autowired
+    lateinit var excelRowMapper: ExcelRowMapper
+
+    @Autowired
+    lateinit var excelRepository: ExcelRepository
 
     private var jsonParser = Json { ignoreUnknownKeys = true }
 
@@ -41,7 +45,7 @@ class ExcelServiceImpl: ExcelService {
         var jsonArray1 = JSONArray()
         var jsonArray2 = JSONArray()
 
-        var doppioni = mutableSetOf<ExcelRowDto>()
+        val doppioni = mutableSetOf<ExcelRowDto>()
 
         val time = measureTimeMillis {
             runBlocking {
@@ -68,9 +72,12 @@ class ExcelServiceImpl: ExcelService {
             set1.forEach { if(set2.contains(it)) doppioni.add(it) }
         }
 
+        val listEntities = this.excelRowMapper.toEntities(doppioni.toList())
+        val doppioniSaved = this.excelRepository.saveAll(listEntities)
+
         logger.info("findDoppioni(file1: ${file1.originalFilename}, file2: ${file2.originalFilename}) finished in $time, found ${doppioni.size} doppioni")
 
-        return ServerResponseDto.ok(doppioni.toList())
+        return ServerResponseDto.ok(this.excelRowMapper.toDtos(doppioniSaved))
     }
 
 }

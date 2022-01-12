@@ -6,6 +6,7 @@ plugins {
 	kotlin("jvm") version "1.6.10"
 	kotlin("plugin.spring") version "1.6.10"
 	kotlin("plugin.serialization") version "1.6.10"
+	kotlin("plugin.jpa") version "1.6.10"
 }
 
 group = "com.gierre"
@@ -34,6 +35,9 @@ dependencies {
 	implementation("org.apache.poi:poi-ooxml:5.1.0")
 	implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0-native-mt")
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.6.2")
+	implementation("mysql:mysql-connector-java:8.0.27")
+
 
 	developmentOnly("org.springframework.boot:spring-boot-devtools:2.6.2")
 	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor:2.6.2")
