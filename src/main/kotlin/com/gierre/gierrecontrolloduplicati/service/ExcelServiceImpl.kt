@@ -7,12 +7,15 @@ import com.gierre.gierrecontrolloduplicati.mapper.ExcelRowMapper
 import com.gierre.gierrecontrolloduplicati.repository.ExcelRepository
 import kotlinx.coroutines.*
 import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.configurationprocessor.json.JSONArray
+import org.springframework.core.io.InputStreamResource
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.util.logging.Logger
+import javax.annotation.Resource
 import kotlin.system.measureTimeMillis
 
 
@@ -36,8 +39,23 @@ class ExcelServiceImpl: ExcelService {
 
 
     override fun findDoppioni(file1: MultipartFile, file2: MultipartFile): ServerResponseDto<List<ExcelRowDto>> {
+        return ServerResponseDto.ok(this.findDoppioniWorker(file1, file2))
+    }
 
-        logger.info("findDoppioni(file1: ${file1.originalFilename}, file2: ${file2.originalFilename}) started.")
+
+
+    override fun findDoppioniExcel(file1: MultipartFile, file2: MultipartFile): ByteArray {
+        val doppioni = this.findDoppioniWorker(file1, file2)
+        val headers = listOf<String>("Data Creaz.", "POD", "PDR")
+        val string = this.jsonParser.encodeToString<List<ExcelRowDto>>(doppioni)
+        val fileBuffer = this.excelHelper.write(headers, JSONArray(string))
+        return fileBuffer.toByteArray()
+    }
+
+
+
+    private fun findDoppioniWorker(file1: MultipartFile, file2: MultipartFile): List<ExcelRowDto> {
+        logger.info("findDoppioniWorker(file1: ${file1.originalFilename}, file2: ${file2.originalFilename}) started.")
 
         var list1: List<ExcelRowDto> = emptyList()
         var list2: List<ExcelRowDto> = emptyList()
@@ -75,9 +93,8 @@ class ExcelServiceImpl: ExcelService {
         val listEntities = this.excelRowMapper.toEntities(doppioni.toList())
         val doppioniSaved = this.excelRepository.saveAll(listEntities)
 
-        logger.info("findDoppioni(file1: ${file1.originalFilename}, file2: ${file2.originalFilename}) finished in $time, found ${doppioni.size} doppioni")
+        logger.info("findDoppioniWorker(file1: ${file1.originalFilename}, file2: ${file2.originalFilename}) finished in $time ms, found ${doppioni.size} doppioni")
 
-        return ServerResponseDto.ok(this.excelRowMapper.toDtos(doppioniSaved))
+        return this.excelRowMapper.toDtos(doppioniSaved)
     }
-
 }

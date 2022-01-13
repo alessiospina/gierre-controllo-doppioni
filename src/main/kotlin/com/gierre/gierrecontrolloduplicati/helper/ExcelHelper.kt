@@ -1,10 +1,12 @@
 package com.gierre.gierrecontrolloduplicati.helper
 
 import com.gierre.gierrecontrolloduplicati.exception.FileExcelException
+import org.apache.commons.io.output.ByteArrayOutputStream
 import org.apache.poi.ss.usermodel.Row
 import org.apache.poi.ss.usermodel.Sheet
 import org.apache.poi.ss.usermodel.Workbook
 import org.apache.poi.ss.usermodel.WorkbookFactory
+import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import org.springframework.boot.configurationprocessor.json.JSONArray
 import org.springframework.boot.configurationprocessor.json.JSONObject
 import org.springframework.stereotype.Component
@@ -51,9 +53,37 @@ class ExcelHelper {
             }
         }
 
-        logger.info("read(${file.originalFilename}) finished in $time ms => ${jsonArray.length()} row processed.")
+        logger.info("read(filename: ${file.originalFilename}) finished in $time ms => ${jsonArray.length()} row processed.")
 
         return jsonArray
+    }
+
+
+
+    fun write(headers: List<String>, data: JSONArray): ByteArrayOutputStream {
+
+        val xlWb = XSSFWorkbook()
+        val xlWs = xlWb.createSheet()
+
+        val headerRow = xlWs.createRow(0)
+
+        headers.forEachIndexed {index, value ->
+            headerRow.createCell(index).setCellValue(value)
+        }
+
+        for (i in 1 until data.length()) {
+            val dataRow = xlWs.createRow(i)
+            val obj = data.getJSONObject(i)
+            headers.forEachIndexed { index, it ->
+                dataRow.createCell(index).setCellValue(obj.optString(it))
+            }
+        }
+
+        val bos = ByteArrayOutputStream()
+        xlWb.write(bos)
+        bos.close()
+
+        return bos
     }
 
 
@@ -70,7 +100,8 @@ class ExcelHelper {
         val data = JSONObject()
 
         for(i in 0 until row.lastCellNum) {
-            data.put(headers[i], row.getCell(i))
+            val cell = row.getCell(i)
+            data.put(headers[i], cell)
         }
 
         return data
