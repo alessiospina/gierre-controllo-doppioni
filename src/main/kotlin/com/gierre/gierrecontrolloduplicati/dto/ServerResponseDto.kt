@@ -1,7 +1,9 @@
 package com.gierre.gierrecontrolloduplicati.dto
 
+import kotlinx.serialization.Serializable
 import org.springframework.http.HttpStatus
 
+@Serializable
 class ServerResponseDto<T>(
     val status: HttpStatus,
     val message: String,

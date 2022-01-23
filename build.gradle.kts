@@ -31,12 +31,14 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	implementation("io.springfox:springfox-swagger2:2.9.2") // dont update to the lastest version
 	implementation("io.springfox:springfox-swagger-ui:2.9.2") // dont update to the lastest version
-	implementation("org.apache.poi:poi:5.1.0")
-	implementation("org.apache.poi:poi-ooxml:5.1.0")
 	implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0-native-mt")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.6.2")
 	implementation("mysql:mysql-connector-java:8.0.27")
+	implementation("org.json:json:20211205")
+	implementation("org.apache.httpcomponents:httpclient:4.5.13")
+	implementation("org.apache.httpcomponents:httpmime:4.5.13")
+	implementation("com.google.code.gson:gson:2.8.9")
 
 
 	developmentOnly("org.springframework.boot:spring-boot-devtools:2.6.2")

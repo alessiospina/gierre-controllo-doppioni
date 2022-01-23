@@ -17,6 +17,9 @@ data class ExcelRowDto(
     @SerialName(value = "PDR")
     val pdr: String,
 
+    @SerialName(value = "Data creaz.")
+    val data_creaz: String,
+
     @Transient
-    val createdAt: LocalDateTime? = null,
+    val createdAt: LocalDateTime? = LocalDateTime.now(),
 ) {}

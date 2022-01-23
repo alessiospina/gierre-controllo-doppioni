@@ -23,3 +23,5 @@ spring:
     multipart:
       max-file-size: 1024MB
       max-request-size: 1024MB
+  env:
+    gierre-excel-manager: "https://gierre-excel-manager-microservice-tqsgvxvlmq-ew.a.run.app/api/excel/read"

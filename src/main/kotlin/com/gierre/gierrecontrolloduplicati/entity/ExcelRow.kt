@@ -14,6 +14,8 @@ class ExcelRow(
 
     val pdr: String,
 
+    val data_creaz: String,
+
     val createdAt: LocalDateTime = LocalDateTime.now()
 )
 {}
